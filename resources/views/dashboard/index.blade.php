@@ -1,50 +1,46 @@
 <x-dashboard.main title="Dashboard">
     <div class="p-6 text-white">
 
-        {{-- Sapaan & Jam realtime (menggunakan Day.js) --}}
         <div class="flex items-center justify-between mb-2">
             <div>
                 <h1 id="greeting" class="text-2xl font-bold text-black">
-                    <!-- Akan diisi oleh JS -->
                 </h1>
                 <p id="subgreeting" class="text-gray-500">Berikut ringkasan aktivitas perpustakaan hari ini.</p>
             </div>
 
-            {{-- Jam realtime --}}
             <div class="text-right">
                 <div class="text-sm text-gray-500">Waktu Lokal</div>
                 <div id="clock" class="text-lg font-mono font-semibold text-black">--:--:--</div>
             </div>
         </div>
 
-        {{-- Statistik cards --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white rounded-xl p-5 shadow border border-orange-200">
-                <div class="flex justify-between">
-                    <x-lucide-library-big class="w-10 h-10 text-orange-500" />
-                    <span class="text-sm text-gray-500">Total Buku</span>
-                </div>
-                <h2 class="text-3xl font-semibold text-black mt-2">{{ $totalBuku }}</h2>
-            </div>
-
-            <div class="bg-white rounded-xl p-5 shadow border border-orange-200">
-                <div class="flex justify-between">
-                    <x-lucide-users class="w-10 h-10 text-orange-500" />
-                    <span class="text-sm text-gray-500">Total Pengunjung</span>
-                </div>
-                <h2 class="text-3xl font-semibold text-black mt-2">{{ $totalPengunjung }}</h2>
-            </div>
-
-            <div class="bg-white rounded-xl p-5 shadow border border-orange-200">
-                <div class="flex justify-between">
-                    <x-lucide-calendar class="w-10 h-10 text-orange-500" />
-                    <span class="text-sm text-gray-500">Total Kunjungan</span>
-                </div>
-                <h2 class="text-3xl font-semibold text-black mt-2">{{ $totalKunjungan }}</h2>
-            </div>
-        </div>
-
         @if (Auth::user()->role === 'admin')
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-xl p-5 shadow border border-orange-200">
+                    <div class="flex justify-between">
+                        <x-lucide-library-big class="w-10 h-10 text-orange-500" />
+                        <span class="text-sm text-gray-500">Total Buku</span>
+                    </div>
+                    <h2 class="text-3xl font-semibold text-black mt-2">{{ $totalBuku }}</h2>
+                </div>
+
+                <div class="bg-white rounded-xl p-5 shadow border border-orange-200">
+                    <div class="flex justify-between">
+                        <x-lucide-users class="w-10 h-10 text-orange-500" />
+                        <span class="text-sm text-gray-500">Total Pengunjung</span>
+                    </div>
+                    <h2 class="text-3xl font-semibold text-black mt-2">{{ $totalPengunjung }}</h2>
+                </div>
+
+                <div class="bg-white rounded-xl p-5 shadow border border-orange-200">
+                    <div class="flex justify-between">
+                        <x-lucide-calendar class="w-10 h-10 text-orange-500" />
+                        <span class="text-sm text-gray-500">Total Kunjungan</span>
+                    </div>
+                    <h2 class="text-3xl font-semibold text-black mt-2">{{ $totalKunjungan }}</h2>
+                </div>
+            </div>
+
             <div class="bg-white rounded-xl p-6 shadow border border-orange-200 mb-8">
                 <h2 class="text-xl font-bold mb-4 text-black">🏆 Ranking Pengunjung Teraktif</h2>
 
