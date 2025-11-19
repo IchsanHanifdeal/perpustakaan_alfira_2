@@ -42,6 +42,18 @@
                     <x-lucide-calendar /> Data Kunjungan
                 </a>
             </li>
+            <li>
+                <a href="{{ route('peminjaman') }}"
+                    class="{{ request()->is('dashboard/peminjaman*') ? 'menu-active' : '' }}">
+                    <x-lucide-calendar /> Data Peminjaman
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('pengembalian') }}"
+                    class="{{ request()->is('dashboard/pengembalian*') ? 'menu-active' : '' }}">
+                    <x-lucide-calendar /> Data Pengembalian
+                </a>
+            </li>
         @endif
         @if (Auth::user()->role == 'user')
             <span class="label text-xs font-extrabold opacity-50 mt-4">USER MENU</span>
@@ -56,6 +68,7 @@
                     <x-lucide-calendar /> Kunjungan
                 </a>
             </li>
+
         @endif
 
         <span class="label text-xs font-extrabold opacity-50 mt-4">ADVANCE</span>

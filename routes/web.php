@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PengunjungController;
+use App\Http\Controllers\PengembalianController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -29,4 +31,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard/kunjungan', [PengunjungController::class, 'kunjungan'])->name('kunjungan');
     Route::post('/dashboard/kunjungan/store', [PengunjungController::class, 'kunjungan_store'])->name('kunjungan.store');
+
+    Route::get('/dashboard/peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman');
+    Route::post('/dashboard/peminjaman/store', [PeminjamanController::class, 'store'])->name('peminjaman.store');
+    Route::get('/dashboard/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian');
+    Route::post('/dashboard/pengembalian/store', [PengembalianController::class, 'store'])->name('pengembalian.store');
 });
