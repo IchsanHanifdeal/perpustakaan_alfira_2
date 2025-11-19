@@ -1,45 +1,47 @@
 <x-dashboard.main title="Data Peminjaman">
-    <div class="grid sm:grid-cols-2 xl:grid-cols-2 gap-5 md:gap-6">
-        @foreach (['peminjaman_terbaru', 'tanggal_peminjaman'] as $type)
-            <div class="flex items-center px-4 py-3 bg-neutral border rounded-xl shadow-sm">
-                <span
-                    class="
+    @if (Auth::user()->role === 'admin')
+        <div class="grid sm:grid-cols-2 xl:grid-cols-2 gap-5 md:gap-6">
+            @foreach (['peminjaman_terbaru', 'tanggal_peminjaman'] as $type)
+                <div class="flex items-center px-4 py-3 bg-neutral border rounded-xl shadow-sm">
+                    <span
+                        class="
                     {{ $type == 'peminjaman_terbaru' ? 'bg-pink-300' : '' }}
                     {{ $type == 'tanggal_peminjaman' ? 'bg-pink-300' : '' }}
                     p-3 mr-4 rounded-full">
-                </span>
-                <div>
-                    <p class="text-sm font-medium capitalize text-white">
-                        {{ str_replace('_', ' ', $type) }}
-                    </p>
-                    <p id="{{ $type }}" class="text-lg font-semibold text-white capitalize">
-                        {{ $type == 'peminjaman_terbaru' ? $peminjaman_terbaru->buku->judul ?? 'Tidak ada buku terbaru' : '' }}
-                        {{ $type == 'tanggal_peminjaman' ? $tanggal_peminjaman ?? '0' : '' }}
-                    </p>
-                </div>
-            </div>
-        @endforeach
-    </div>
-    <div class="flex flex-col lg:flex-row gap-5">
-        @if (Auth::user()->role === 'admin')
-            @foreach (['tambah_peminjaman'] as $item)
-                <div onclick="{{ $item . '_modal' }}.showModal()"
-                    class="bg-neutral flex items-center justify-between p-5 sm:p-7 hover:shadow-md active:scale-[.97] border border-blue-200 cursor-pointer border-back rounded-xl w-full">
+                    </span>
                     <div>
-                        <h1
-                            class="text-white font-semibold flex items-start gap-3 font-semibold font-[onest] sm:text-lg capitalize">
-                            {{ str_replace('_', ' ', $item) }}
-                        </h1>
-                        <p class="text-sm opacity-60 text-white">
-                            {{ $item == 'tambah_peminjaman' ? 'Fitur Peminjaman Buku memungkinkan pengguna untuk meminjam buku yang tersedia di perpustakaan. Pada fitur ini, pengguna dapat melihat detail buku, mengecek ketersediaan stok, lalu melakukan proses peminjaman dengan mudah.' : '' }}
+                        <p class="text-sm font-medium capitalize text-white">
+                            {{ str_replace('_', ' ', $type) }}
+                        </p>
+                        <p id="{{ $type }}" class="text-lg font-semibold text-white capitalize">
+                            {{ $type == 'peminjaman_terbaru' ? $peminjaman_terbaru->buku->judul ?? 'Tidak ada buku terbaru' : '' }}
+                            {{ $type == 'tanggal_peminjaman' ? $tanggal_peminjaman ?? '0' : '' }}
                         </p>
                     </div>
-                    <x-lucide-plus
-                        class="{{ $item == 'tambah_peminjaman' ? '' : 'hidden' }} size-5 sm:size-7 font-semibold text-white" />
                 </div>
             @endforeach
-        @endif
-    </div>
+        </div>
+        <div class="flex flex-col lg:flex-row gap-5">
+            @if (Auth::user()->role === 'admin')
+                @foreach (['tambah_peminjaman'] as $item)
+                    <div onclick="{{ $item . '_modal' }}.showModal()"
+                        class="bg-neutral flex items-center justify-between p-5 sm:p-7 hover:shadow-md active:scale-[.97] border border-blue-200 cursor-pointer border-back rounded-xl w-full">
+                        <div>
+                            <h1
+                                class="text-white font-semibold flex items-start gap-3 font-semibold font-[onest] sm:text-lg capitalize">
+                                {{ str_replace('_', ' ', $item) }}
+                            </h1>
+                            <p class="text-sm opacity-60 text-white">
+                                {{ $item == 'tambah_peminjaman' ? 'Fitur Peminjaman Buku memungkinkan pengguna untuk meminjam buku yang tersedia di perpustakaan. Pada fitur ini, pengguna dapat melihat detail buku, mengecek ketersediaan stok, lalu melakukan proses peminjaman dengan mudah.' : '' }}
+                            </p>
+                        </div>
+                        <x-lucide-plus
+                            class="{{ $item == 'tambah_peminjaman' ? '' : 'hidden' }} size-5 sm:size-7 font-semibold text-white" />
+                    </div>
+                @endforeach
+            @endif
+        </div>
+    @endif
     <div class="flex gap-5">
         @foreach (['Daftar_peminjaman'] as $item)
             <div class="flex flex-col border-back rounded-xl w-full">

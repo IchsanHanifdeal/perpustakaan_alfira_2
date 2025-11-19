@@ -16,4 +16,8 @@ class Pengunjung extends Model
     {
         return $this->belongsTo(User::class,  'user_id');
     }
+    public function absensis()
+    {
+        return $this->hasMany(Absensi::class);
+    }
 }

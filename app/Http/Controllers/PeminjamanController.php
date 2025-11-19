@@ -8,6 +8,7 @@ use App\Models\Pengunjung;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Devrabiul\ToastMagic\Facades\ToastMagic;
 
 class PeminjamanController extends Controller
@@ -17,21 +18,29 @@ class PeminjamanController extends Controller
      */
     public function index()
     {
-        $peminjaman_terbaru = Peminjaman::with('buku')
-            ->orderBy('created_at', 'desc')
-            ->first();
+        if (Auth::user()->role == 'admin') {
+            $peminjaman_terbaru = Peminjaman::with('buku')
+                ->orderBy('created_at', 'desc')
+                ->first();
 
-        $tanggal_peminjaman = $peminjaman_terbaru
-            ? $peminjaman_terbaru->created_at->format('d-m-Y')
-            : null;
+            $tanggal_peminjaman = $peminjaman_terbaru
+                ? $peminjaman_terbaru->created_at->format('d-m-Y')
+                : null;
 
-        return view('dashboard.peminjaman', [
-            'peminjaman'           => Peminjaman::all(),
-            'peminjaman_terbaru'   => $peminjaman_terbaru,
-            'tanggal_peminjaman'   => $tanggal_peminjaman,
-            'buku'                 => Buku::all(),
-            'pengunjung'           => Pengunjung::all(),
-        ]);
+            return view('dashboard.peminjaman', [
+                'peminjaman'           => Peminjaman::all(),
+                'peminjaman_terbaru'   => $peminjaman_terbaru,
+                'tanggal_peminjaman'   => $tanggal_peminjaman,
+                'buku'                 => Buku::all(),
+                'pengunjung'           => Pengunjung::all(),
+            ]);
+        } else {
+            return view('dashboard.peminjaman', [
+                'peminjaman'           => Peminjaman::where('user_id', Auth::user()->id)->get(),
+                'buku'                 => Buku::all(),
+                'pengunjung'           => Pengunjung::all(),
+            ]);
+        }
     }
 
 

@@ -68,7 +68,12 @@
                     <x-lucide-calendar /> Kunjungan
                 </a>
             </li>
-
+            <li>
+                <a href="{{ route('peminjaman') }}"
+                    class="{{ request()->is('dashboard/peminjaman*') ? 'menu-active' : '' }}">
+                    <x-lucide-calendar /> Riwayat Peminjaman
+                </a>
+            </li>
         @endif
 
         <span class="label text-xs font-extrabold opacity-50 mt-4">ADVANCE</span>
@@ -100,8 +105,8 @@
             </button>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit"
-                    class="btn btn-primary bg-red-600 hover:bg-red-700 text-white border-0" onclick="closeAllModals(event)">Logout</button>
+                <button type="submit" class="btn btn-primary bg-red-600 hover:bg-red-700 text-white border-0"
+                    onclick="closeAllModals(event)">Logout</button>
             </form>
         </div>
     </div>

@@ -38,5 +38,6 @@
     <!-- Title -->
     <title>Perpustakaan | {{ $title ?? 'Perpustakaan' }}</title>
     <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 
 </head>
