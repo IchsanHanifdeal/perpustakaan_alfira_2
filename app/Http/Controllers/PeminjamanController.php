@@ -153,16 +153,68 @@ class PeminjamanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Peminjaman $peminjaman)
+    public function update(Request $request, $id)
     {
-        //
+        $peminjaman = Peminjaman::findOrFail($id);
+
+        $validated = $request->validate([
+            'buku' => 'required|exists:buku,id',
+            'nama_peminjam' => 'required',
+            'tanggal_pinjam' => 'required|date',
+            'jatuh_tempo' => 'required|date|after_or_equal:tanggal_pinjam',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            if ($peminjaman->buku_id != $validated['buku']) {
+                Buku::where('id', $peminjaman->buku_id)->increment('stock', 1);
+
+                $bukuBaru = Buku::find($validated['buku']);
+                if ($bukuBaru->stock <= 0) {
+                    return back()->withErrors(['message' => 'Stok buku tidak tersedia']);
+                }
+                $bukuBaru->decrement('stock', 1);
+            }
+
+            $peminjaman->update([
+                'buku_id' => $validated['buku'],
+                'user_id' => $validated['nama_peminjam'],
+                'tanggal_pinjam' => $validated['tanggal_pinjam'],
+                'tanggal_kembali' => $validated['jatuh_tempo'],
+            ]);
+
+            DB::commit();
+
+            ToastMagic::success('Peminjaman berhasil diperbarui.');
+            return redirect()->route('peminjaman');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['message' => 'Gagal memperbarui data']);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Peminjaman $peminjaman)
+    public function destroy($id)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $peminjaman = Peminjaman::findOrFail($id);
+
+            Buku::where('id', $peminjaman->buku_id)->increment('stock', 1);
+
+            $peminjaman->delete();
+
+            DB::commit();
+
+            ToastMagic::success('Peminjaman berhasil dihapus.');
+            return redirect()->route('peminjaman');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['message' => 'Gagal menghapus data']);
+        }
     }
 }

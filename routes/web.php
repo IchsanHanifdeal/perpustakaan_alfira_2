@@ -34,6 +34,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard/peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman');
     Route::post('/dashboard/peminjaman/store', [PeminjamanController::class, 'store'])->name('peminjaman.store');
+    Route::delete('/dashboard/peminjaman/{id}/delete', [PeminjamanController::class, 'destroy'])->name('peminjaman.delete');
+    Route::put('/dashboard/peminjaman/{id}/update', [PeminjamanController::class, 'update'])->name('peminjaman.update');
     Route::get('/dashboard/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian');
     Route::post('/dashboard/pengembalian/store', [PengembalianController::class, 'store'])->name('pengembalian.store');
 });

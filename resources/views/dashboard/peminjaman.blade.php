@@ -58,7 +58,7 @@
                         <table class="table table-zebra w-full">
                             <thead>
                                 <tr>
-                                    @foreach (['No', 'buku', 'nama peminjam', 'tanggal peminjaman', 'jatuh tempo', 'status'] as $header)
+                                    @foreach (['No', 'buku', 'nama peminjam', 'tanggal peminjaman', 'jatuh tempo', 'status', ''] as $header)
                                         <th class="uppercase font-bold text-center text-white">{{ $header }}</th>
                                     @endforeach
                                 </tr>
@@ -73,11 +73,147 @@
                                             {{ \Carbon\Carbon::parse($i->tanggal_pinjam)->format('d-m-Y') }}
                                         </td>
                                         <td class="text-center text-white">
-                                            {{ \Carbon\Carbon::parse($i->jatuh_tempo)->format('d-m-Y') }}
+                                            {{ \Carbon\Carbon::parse($i->tanggal_kembali)->format('d-m-Y') }}
                                         </td>
-
                                         <td class="text-center text-white">
                                             {{ $i->status == 'dipinjam' ? 'Dipinjam' : 'Dikembalikan' }}</td>
+                                        <td class="flex items-center whitespace-nowrap gap-4 justify-center">
+                                            <div class="tooltip" data-tip="Edit Peminjaman">
+                                                <button type="button" class="btn btn-xs btn-outline btn-warning"
+                                                    onclick="document.getElementById('update-modal-{{ $i->id }}').showModal()">
+                                                    <x-lucide-pen class="w-4 h-4" />
+                                                </button>
+                                            </div>
+                                            <div class="tooltip" data-tip="Hapus Peminjaman">
+                                                <button type="button"
+                                                    onclick="document.getElementById('hapus-modal-{{ $i->id }}').showModal()"
+                                                    class="btn btn-xs btn-outline btn-error">
+                                                    <x-lucide-trash class="w-4 h-4" />
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <dialog id="hapus-modal-{{ $i->id }}"
+                                            class="modal modal-bottom sm:modal-middle">
+                                            <div class="modal-box bg-neutral text-white">
+                                                <h3 class="text-lg font-bold">Hapus Peminjaman</h3>
+
+                                                <form method="POST" action="{{ route('peminjaman.delete', $i->id) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+
+                                                    <p class="mt-2">
+                                                        Apakah Anda yakin ingin menghapus peminjaman
+                                                        <span class="font-bold">{{ $i->buku?->judul }}</span>?
+                                                    </p>
+
+                                                    <div class="modal-action mt-5">
+                                                        <button type="button" class="btn"
+                                                            onclick="document.getElementById('hapus-modal-{{ $i->id }}').close()">
+                                                            Batal
+                                                        </button>
+
+                                                        <button type="submit" class="btn btn-error"
+                                                            onclick="closeAllModals(event)">
+                                                            Hapus
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </dialog>
+
+                                        <dialog id="update-modal-{{ $i->id }}"
+                                            class="modal modal-bottom sm:modal-middle">
+                                            <div class="modal-box bg-neutral text-white">
+                                                <h3 class="text-lg font-bold">Update Peminjaman</h3>
+
+                                                <div class="mt-3">
+                                                    <form method="POST"
+                                                        action="{{ route('peminjaman.update', $i->id) }}"
+                                                        enctype="multipart/form-data">
+                                                        @csrf
+                                                        @method('PUT')
+
+                                                        <div class="mb-4">
+                                                            <label
+                                                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Buku</label>
+                                                            <select name="buku"
+                                                                class="bg-gray-300 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 @error('buku') border-red-500 @enderror">
+                                                                <option value="" disabled hidden>Pilih Buku
+                                                                </option>
+                                                                @foreach ($buku as $b)
+                                                                    <option value="{{ $b->id }}"
+                                                                        {{ old('buku', $i->buku_id) == $b->id ? 'selected' : '' }}>
+                                                                        {{ $b->judul }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                            @error('buku')
+                                                                <span
+                                                                    class="text-red-500 text-sm">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+
+                                                        <div class="mb-4">
+                                                            <label
+                                                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama
+                                                                Peminjam</label>
+                                                            <select name="nama_peminjam"
+                                                                class="bg-gray-300 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 @error('nama_peminjam') border-red-500 @enderror">
+                                                                <option value="" disabled hidden>Pilih
+                                                                    Peminjam</option>
+                                                                @foreach ($pengunjung as $p)
+                                                                    <option value="{{ $p->id }}"
+                                                                        {{ old('nama_peminjam', $i->user_id) == $p->id ? 'selected' : '' }}>
+                                                                        {{ $p->user?->nama }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                            @error('nama_peminjam')
+                                                                <span
+                                                                    class="text-red-500 text-sm">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+
+                                                        <div class="mb-4">
+                                                            <label
+                                                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal
+                                                                Peminjaman</label>
+                                                            <input type="date" name="tanggal_pinjam"
+                                                                class="bg-gray-300 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 @error('tanggal_pinjam') border-red-500 @enderror"
+                                                                value="{{ old('tanggal_pinjam', date('Y-m-d', strtotime($i->tanggal_pinjam))) }}">
+                                                            @error('tanggal_pinjam')
+                                                                <span
+                                                                    class="text-red-500 text-sm">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+
+                                                        <div class="mb-4">
+                                                            <label
+                                                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jatuh
+                                                                Tempo</label>
+                                                            <input type="date" name="jatuh_tempo"
+                                                                class="bg-gray-300 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 @error('jatuh_tempo') border-red-500 @enderror"
+                                                                value="{{ old('jatuh_tempo', date('Y-m-d', strtotime($i->tanggal_kembali))) }}">
+                                                            @error('jatuh_tempo')
+                                                                <span
+                                                                    class="text-red-500 text-sm">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+
+                                                        <div class="modal-action mt-5">
+                                                            <button type="button" class="btn"
+                                                                onclick="document.getElementById('update-modal-{{ $i->id }}').close()">
+                                                                Batal
+                                                            </button>
+                                                            <button type="submit" class="btn btn-primary"
+                                                                onclick="closeAllModals(event)">Update</button>
+                                                        </div>
+
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </dialog>
+
                                     </tr>
                                 @empty
                                     <tr>
@@ -139,7 +275,8 @@
                     @enderror
                 </div>
                 <div class="mb-4">
-                    <label for="jatuh_tempo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jatuh
+                    <label for="jatuh_tempo"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jatuh
                         Tempo</label>
                     <input type="date" name="jatuh_tempo" id="jatuh_tempo"
                         class="bg-gray-300 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 @error('jatuh_tempo') border-red-500 @enderror"
