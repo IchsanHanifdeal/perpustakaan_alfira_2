@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PengunjungController;
 use App\Http\Controllers\PengembalianController;
@@ -38,4 +39,5 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/dashboard/peminjaman/{id}/update', [PeminjamanController::class, 'update'])->name('peminjaman.update');
     Route::get('/dashboard/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian');
     Route::post('/dashboard/pengembalian/store', [PengembalianController::class, 'store'])->name('pengembalian.store');
+    Route::get('/dashboard/laporan', [LaporanController::class, 'index'])->name('laporan');
 });

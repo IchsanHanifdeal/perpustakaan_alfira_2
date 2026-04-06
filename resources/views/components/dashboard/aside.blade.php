@@ -54,6 +54,12 @@
                     <x-lucide-calendar /> Data Pengembalian
                 </a>
             </li>
+            <li>
+                <a href="{{ route('laporan') }}"
+                    class="{{ request()->is('dashboard/laporan*') ? 'menu-active' : '' }}">
+                    <x-lucide-file-text /> Data Laporan
+                </a>
+            </li>
         @endif
         @if (Auth::user()->role == 'user')
             <span class="label text-xs font-extrabold opacity-50 mt-4">USER MENU</span>
