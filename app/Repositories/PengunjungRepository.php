@@ -36,7 +36,7 @@ class PengunjungRepository
                         'nama' => $data['nama'],
                         'email' => $email,
                         'password' => Hash::make($nisn),
-                        'role' => 'user', // Sesuaikan dengan enum: admin, user
+                        'role' => 'user', 
                     ]);
                 }
 
