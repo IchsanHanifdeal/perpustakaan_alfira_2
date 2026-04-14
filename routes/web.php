@@ -44,4 +44,5 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard/import', [ImportController::class, 'index'])->name('import');
     Route::post('/dashboard/import', [ImportController::class, 'store'])->name('import.store');
+    Route::post('/dashboard/import/buku', [ImportController::class, 'storeBuku'])->name('import_buku.store');
 });

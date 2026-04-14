@@ -13,12 +13,25 @@ class BukuController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $search = $request->input('q');
+
+        $buku = Buku::query()
+            ->when($search, function ($query, $search) {
+                $query->where('judul', 'like', '%' . $search . '%')
+                    ->orWhere('penulis', 'like', '%' . $search . '%')
+                    ->orWhere('penerbit', 'like', '%' . $search . '%');
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
         return view('dashboard.buku', [
             'buku_terbaru' => Buku::latest()->first(),
             'jumlah_buku' => Buku::count(),
-            'buku' => Buku::all(),
+            'buku' => $buku,
+            'search' => $search,
         ]);
     }
 
