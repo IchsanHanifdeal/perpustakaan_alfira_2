@@ -5,9 +5,6 @@
                 <h1 class="flex items-start gap-3 font-semibold font-[onest] text-lg capitalize">
                     Import Data Siswa
                 </h1>
-                <p class="text-sm opacity-60">
-                    Silahkan unggah file Excel yang berisi data siswa sesuai dengan format yang telah ditentukan.
-                </p>
             </div>
             <div class="flex flex-col rounded-b-xl gap-6 p-5 sm:p-7 bg-neutral">
                 <form action="{{ route('import.store') }}" method="POST" enctype="multipart/form-data">
