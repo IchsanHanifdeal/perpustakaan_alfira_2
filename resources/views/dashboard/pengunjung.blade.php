@@ -43,13 +43,29 @@
     <div class="flex gap-5">
         @foreach (['Daftar_pengunjung'] as $item)
             <div class="flex flex-col border-back rounded-xl w-full">
-                <div class="p-5 sm:p-7 bg-white rounded-t-xl">
-                    <h1 class="flex items-start gap-3 font-semibold font-[onest] text-lg capitalize">
-                        {{ str_replace('_', ' ', $item) }}
-                    </h1>
-                    <p class="text-sm opacity-60">
-                        Jelajahi dan ketahui pengunjung terbaru.
-                    </p>
+                <div class="p-5 sm:p-7 bg-white rounded-t-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="flex items-start gap-3 font-semibold font-[onest] text-lg capitalize">
+                            {{ str_replace('_', ' ', $item) }}
+                        </h1>
+                        <p class="text-sm opacity-60">
+                            Jelajahi dan ketahui pengunjung terbaru.
+                        </p>
+                    </div>
+                    <form action="{{ route('pengunjung') }}" method="GET" class="flex items-center gap-2">
+                        <div class="relative w-full md:w-64">
+                            <input type="text" name="search" value="{{ request('search') }}"
+                                placeholder="Cari nama, nisn, kelas..."
+                                class="input input-bordered w-full h-10 pr-10 bg-gray-50 text-black border-blue-200 focus:border-blue-500" />
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                <x-lucide-search class="size-4 text-gray-400" />
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm h-10 px-4">Cari</button>
+                        @if(request('search'))
+                            <a href="{{ route('pengunjung') }}" class="btn btn-ghost btn-sm h-10 text-error">Reset</a>
+                        @endif
+                    </form>
                 </div>
                 <div class="flex flex-col rounded-b-xl gap-3 divide-y pt-0 p-5 sm:p-7 bg-neutral">
                     <div class="overflow-x-auto">
@@ -71,7 +87,9 @@
                             <tbody>
                                 @forelse ($pengunjung as $i => $item)
                                     <tr>
-                                        <td class="text-center whitespace-nowrap text-white">{{ $i + 1 }}</td>
+                                        <td class="text-center whitespace-nowrap text-white">
+                                            {{ ($pengunjung->currentPage() - 1) * $pengunjung->perPage() + $loop->iteration }}
+                                        </td>
                                         <td class="text-center whitespace-nowrap text-white">
                                             {{ $item->user->nama ?? '-' }}</td>
                                         <td class="text-center whitespace-nowrap text-white">
@@ -208,6 +226,9 @@
                                 @endforelse
                             </tbody>
                         </table>
+                    </div>
+                    <div class="mt-6 px-5 pb-5">
+                        {{ $pengunjung->links('vendor.pagination.tailwind') }}
                     </div>
                 </div>
             </div>

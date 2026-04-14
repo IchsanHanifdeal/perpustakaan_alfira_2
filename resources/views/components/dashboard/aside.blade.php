@@ -60,6 +60,12 @@
                     <x-lucide-file-text /> Data Laporan
                 </a>
             </li>
+            <li>
+                <a href="{{ route('import') }}"
+                    class="{{ request()->is('dashboard/import*') ? 'menu-active' : '' }}">
+                    <x-lucide-import /> Import Data
+                </a>
+            </li>
         @endif
         @if (Auth::user()->role == 'user')
             <span class="label text-xs font-extrabold opacity-50 mt-4">USER MENU</span>

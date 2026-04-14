@@ -16,10 +16,25 @@ class PengunjungController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $search = $request->query('search');
+
+        $pengunjung = Pengunjung::with('user')
+            ->when($search, function ($query, $search) {
+                return $query->where('nisn', 'like', "%{$search}%")
+                    ->orWhere('kelas', 'like', "%{$search}%")
+                    ->orWhereHas('user', function ($q) use ($search) {
+                        $q->where('nama', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%");
+                    });
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
         return view('dashboard.pengunjung', [
-            'pengunjung' => Pengunjung::all(),
+            'pengunjung' => $pengunjung,
             'pengunjung_terbaru' => Pengunjung::latest()->first(),
             'jumlah_pengunjung' => Pengunjung::count(),
         ]);

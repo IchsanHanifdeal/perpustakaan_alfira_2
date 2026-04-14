@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ImportController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PengunjungController;
@@ -40,4 +41,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian');
     Route::post('/dashboard/pengembalian/store', [PengembalianController::class, 'store'])->name('pengembalian.store');
     Route::get('/dashboard/laporan', [LaporanController::class, 'index'])->name('laporan');
+
+    Route::get('/dashboard/import', [ImportController::class, 'index'])->name('import');
+    Route::post('/dashboard/import', [ImportController::class, 'store'])->name('import.store');
 });
